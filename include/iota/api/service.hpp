@@ -30,7 +30,7 @@
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 #include <iota/constants.hpp>
 #include <iota/errors/bad_request.hpp>
