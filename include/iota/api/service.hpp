@@ -87,16 +87,16 @@ public:
     tcp::socket               socket{ ioc };
 
     try {
-      auto const results = resolver.resolve(_host, std::to_string(_port));
+      auto const results = resolver.resolve(host_, std::to_string(port_));
 
       boost::asio::connect(socket, results.begin(), results.end());
 
       http::request<http::string_body> req{ http::verb::post, "/", 11 };
-      req.set(http::field::host, _host);
+      req.set(http::field::host, host_);
       req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
       req.set(http::field::content_type, "application/json");
       req.set("X-IOTA-API-Version", "1");
-      req.body() = input.dump();
+      req.body() = data.dump();
       req.content_length(req.body().size());
 
       http::write(socket, req);
@@ -111,7 +111,7 @@ public:
       if (ec && ec != boost::system::errc::not_connected)
         throw boost::system::system_error{ ec };
     } catch (const std::exception& ex) {
-      throw Errors::Unrecognized("Invalid reply from node: " + ex.what());
+      throw Errors::Unrecognized(std::string("Invalid reply from node: ") + ex.what());
     }
 
     return Response{ result };
